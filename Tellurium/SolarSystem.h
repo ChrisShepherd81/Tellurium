@@ -108,9 +108,8 @@ void SolarSystemStep(int steps, bool keep_in_reference_position = true)
   }
 }
 
-void GoToStartPosition()
+void MoveAllPlanetsToReferencePositions()
 {
-  SetUpSolarSystem();
   SolarSystemStep(5, false);
 
   while(!AllPlanetsInReferencePosition())

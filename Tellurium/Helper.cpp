@@ -16,6 +16,7 @@ void ClearSerial()
     Serial.read();
 }
 
+
 int ReadIntFromSerial()
 {
   WaitForSerialInput();

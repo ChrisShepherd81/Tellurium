@@ -14,7 +14,9 @@ Button FastForwardButton(BUTTON_PIN);
 #define PIN_LED_DCF_RECEIVED 53
 #define PIN_LED_TIME_SET 52
 
-void InitClokLEDs()
+static bool TimeIsSet = false;
+
+void InitClockLEDs()
 {
   pinMode(PIN_LED_DCF_RECEIVED, OUTPUT);
   pinMode(PIN_LED_TIME_SET, OUTPUT);
@@ -23,16 +25,22 @@ void InitClokLEDs()
   digitalWrite(PIN_LED_TIME_SET, LOW);
 }
 
+void updateTimeState()
+{
+  digitalWrite(PIN_LED_TIME_SET, HIGH);
+  TimeIsSet = true;
+}
+
 void SetArduinoTime(time_t time)
 {
   setTime(time);
-  digitalWrite(PIN_LED_TIME_SET, HIGH);
+  updateTimeState();
 }
 
 void SetArduinoTime(int hour, int minute, int second, int day, int month, int year)
 {
   setTime(hour, minute, second, day, month, year);
-  digitalWrite(PIN_LED_TIME_SET, HIGH);
+  updateTimeState();
 }
 
 class DCFClock

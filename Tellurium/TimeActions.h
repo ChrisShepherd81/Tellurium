@@ -19,7 +19,6 @@ void SetTimeManually()
   int month = date_string.substring(3,5).toInt();
   int year = date_string.substring(6,10).toInt();
   Serial.println("Setting date to " + String(day) + "." + String(month) + "." + String(year));
-
   
   Serial.println("Enter current time in format HH:MM:SS :");
   while (Serial.available() == 0) {}
@@ -30,29 +29,6 @@ void SetTimeManually()
   Serial.println("Setting time to " + String(hour) + ":" + String(minute) + ":" + String(second));
   
   SetArduinoTime(hour, minute, second, day, month, year);
-}
-
-void SetTimeFromDCF()
-{
-  DCFClock dcf_clock;
-  Serial.println("Waiting for DCF77 time ... ");
-  Serial.println("It will take at least 2 minutes before a first time update.");
-  
-  while(Serial.available() <= 1)
-  {
-    if(dcf_clock.UpdateTime())
-    {
-      digitalWrite(PIN_LED_DCF_RECEIVED, HIGH);
-      Serial.println("Time successfully update");
-      PrintTime();
-      return;
-    }
-    digitalWrite(PIN_LED_DCF_RECEIVED, HIGH);
-    delay(500);
-    digitalWrite(PIN_LED_DCF_RECEIVED, LOW);
-    delay(500);
-    Serial.println("Please wait...");
-  }
 }
 
 #endif // TIMEACTIONS_H
