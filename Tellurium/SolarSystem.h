@@ -1,6 +1,4 @@
-
 #ifndef SOLARSYSTEM_H
-
 #define SOLARSYSTEM_H
 
 #include "Planet.h"
@@ -118,6 +116,32 @@ void MoveAllPlanetsToReferencePositions()
   }
   
   StopAllMotors();
+}
+
+void MoveAllPlanetsToCurrentDate() {
+  Serial.println("Go to current date routine");
+  Serial.println("Moving all planets to start position");
+  MoveAllPlanetsToReferencePositions();
+  Serial.println("Start position reached");
+
+  //Planet loop
+  for (int i = 0; i < NUMBER_OF_PLANETS; ++i) {
+    Planet* planet = SolarSystem[i];
+
+    //Check if planet reached reference position
+    if (planet->isReferencePositionReached()) {
+      Serial.println(planet->getName() + " is in reference position");
+      planet->resetSteps();
+    } else {
+      Serial.println("FAIL: " + planet->getName() + " is not in reference position");
+      continue;
+    }
+
+    unsigned int position_for_planet = planet->getPositionForCurrentTime();
+    Serial.println("Moving: " + planet->getName() + " to position " + String(position_for_planet));
+
+    planet->makeSteps(position_for_planet);
+  }
 }
 
 #endif // SOLARSYSTEM_H

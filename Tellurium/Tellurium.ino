@@ -2,15 +2,14 @@
 #include "Hardware.h"
 #include "Helper.h"
 #include "TimeActions.h"
+#include "SerialIO.h"
 
 DCFClock dcf_clock;
 bool FirstTimeInitialization = true;
 
 void setup() {
   Serial.begin(9600);
-  Serial.print("Tellurium Planetarium\n"
-               "(c) 2021-2023 Astronomischer Arbeitskreis Salzkammergut\n"
-               "\n\n");
+  PrintWelcome();
 
   //FastForwardButton.begin();
   InitClockLEDs();
@@ -21,53 +20,48 @@ void setup() {
   PrintOptions();
 }
 
-void PrintOptions() {
-  ClearSerial();
-  Serial.println("Choose an option");
-  Serial.println("1: Set Time");
-  Serial.println("2: Print Time");
-  Serial.println("Enter your choice:");
+void HandleInput() {
+  switch (ReadOption()) {
+    case 1:
+      SetTimeManually();
+      [[fallthrough]];
+    case 2:
+      PrintTime();
+      break;
+    default:
+      return;
+  }
+
+  PrintOptions();
 }
 
-int CheckIfOptionsWasChoosen() {
-  if (Serial.available() <= 0)
-    return 0;
+void delayLoop(unsigned long loop_start) {
+  unsigned long loop_now = millis();
+  unsigned long loop_runtime = loop_now - loop_start;
 
-  int value = Serial.parseInt();
-  ClearSerial();
-  return value;
+  if (loop_runtime < 1000UL)
+    delay(1000UL - loop_runtime);
+}
+
+void UpdateTimeAndLeds() {
+  if (dcf_clock.UpdateTime())
+    digitalWrite(PIN_LED_DCF_RECEIVED, HIGH);
+  else
+    digitalWrite(PIN_LED_DCF_RECEIVED, LOW);
 }
 
 void loop() {
   unsigned long loop_start = millis();
 
-  switch (CheckIfOptionsWasChoosen()) {
-    case 1:
-      SetTimeManually();
-      // fall trough
-    case 2:
-      PrintTime();
-      break;  
-    default:
-      break;
-  }
+  HandleInput();
+  UpdateTimeAndLeds();
 
-  if (dcf_clock.UpdateTime())
-    digitalWrite(PIN_LED_DCF_RECEIVED, HIGH);
-  else
-    digitalWrite(PIN_LED_DCF_RECEIVED, LOW);
-
-  if(FirstTimeInitialization && TimeIsSet)
-  {
+  if (FirstTimeInitialization && TimeIsSet) {
     MoveAllPlanetsToCurrentDate();
     FirstTimeInitialization = false;
   }
 
-  unsigned long loop_now = millis();
-  unsigned long loop_runtime = loop_now - loop_start;
-  
-  if (loop_runtime < 1000UL) 
-    delay(1000UL - loop_runtime);
+  delayLoop(loop_start);
 }
 
 void FastRun() {
@@ -122,59 +116,6 @@ void FastRun() {
   }
 
   Serial.println("Old positions reached. Routine end reached.");
-}
-
-void MoveAllPlanetsToCurrentDate() {
-  Serial.println("Go to current date routine");
-  Serial.println("Moving all planets to start position");
-  MoveAllPlanetsToReferencePositions();
-  Serial.println("Start position reached");
-
-  //Planet loop
-  for (int i = 0; i < NUMBER_OF_PLANETS; ++i) {
-    Planet* planet = SolarSystem[i];
-
-    //Check if planet reached reference position
-    if (planet->isReferencePositionReached()) {
-      Serial.println(planet->getName() + " is in reference position");
-      planet->resetSteps();
-    } else {
-      Serial.println("FAIL: " + planet->getName() + " is not in reference position");
-      continue;
-    }
-
-    unsigned int position_for_planet = planet->getPositionForCurrentTime();
-    Serial.println("Moving: " + planet->getName() + " to position " + String(position_for_planet));
-
-    planet->makeSteps(position_for_planet);
-  }
-}
-
-void ReadPin() {
-  Serial.println("Enter pin number:");
-  int choose_pin = ReadIntFromSerial();
-  Serial.println("Reading value from Pin: " + String(choose_pin));
-
-  pinMode(choose_pin, INPUT);
-
-  while (Serial.available() <= 1) {
-    Serial.println("Pin value: " + String(digitalRead(choose_pin)));
-  }
-}
-
-void RunAllPlanets() {
-  Serial.println("Running solar system");
-
-  for (int i = 0; i < NUMBER_OF_PLANETS; ++i) {
-    Serial.println("Set speed for " + SolarSystem[i]->getName());
-    SolarSystem[i]->setSpeed(30);
-  }
-
-  while (Serial.available() <= 0) {
-    for (int i = 0; i < NUMBER_OF_PLANETS; ++i) {
-      SolarSystem[i]->makeStep();
-    }
-  }
 }
 
 void ReadButtonState() {
