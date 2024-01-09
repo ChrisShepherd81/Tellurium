@@ -6,6 +6,7 @@
 
 DCFClock dcf_clock;
 bool FirstTimeInitialization = true;
+bool DCFLedState = false;
 
 void setup() {
   Serial.begin(9600);
@@ -47,7 +48,10 @@ void UpdateTimeAndLeds() {
   if (dcf_clock.UpdateTime())
     digitalWrite(PIN_LED_DCF_RECEIVED, HIGH);
   else
-    digitalWrite(PIN_LED_DCF_RECEIVED, LOW);
+  {
+    digitalWrite(PIN_LED_DCF_RECEIVED, DCFLedState);
+    DCFLedState = !DCFLedState;
+  }
 }
 
 void loop() {
