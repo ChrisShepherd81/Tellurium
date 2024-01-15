@@ -142,6 +142,21 @@ void MoveAllPlanetsToCurrentDate() {
 
     planet->makeSteps(position_for_planet);
   }
+
+  StopAllMotors();
+}
+
+void MovePlanets() 
+{
+   //Planet loop
+  for (int i = 0; i < NUMBER_OF_PLANETS; ++i) {
+    Planet* planet = SolarSystem[i];
+    if(planet->getPositionForCurrentTime() < planet->getPosition()) {
+      planet->makeStep();
+    }
+  }
+
+  StopAllMotors();
 }
 
 #endif // SOLARSYSTEM_H

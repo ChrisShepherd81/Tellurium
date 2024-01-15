@@ -19,7 +19,6 @@ public:
   PlanetType getType() const;  
   String getName() const;
   unsigned long getSteps() const;
-  void addSteps(int steps);
   
   unsigned int getPositionForCurrentTime() const;
   unsigned long getSecondsBetweenSteps() const;

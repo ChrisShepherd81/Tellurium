@@ -45,10 +45,10 @@ void delayLoop(unsigned long loop_start) {
 }
 
 void UpdateTimeAndLeds() {
-  if (dcf_clock.UpdateTime())
+  if (dcf_clock.UpdateTime()) {
     digitalWrite(PIN_LED_DCF_RECEIVED, HIGH);
-  else
-  {
+  }
+  else {
     digitalWrite(PIN_LED_DCF_RECEIVED, DCFLedState);
     DCFLedState = !DCFLedState;
   }
@@ -64,7 +64,10 @@ void loop() {
     MoveAllPlanetsToCurrentDate();
     FirstTimeInitialization = false;
   }
-
+  else if(!FirstTimeInitialization && TimeIsSet) {
+    MovePlanets();
+  }
+  
   delayLoop(loop_start);
 }
 
