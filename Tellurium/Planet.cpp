@@ -3,14 +3,13 @@
 
 #include <TimeLib.h>
 
-Planet::Planet(String name, PlanetType type,
+Planet::Planet(String name, 
      int steps_per_360_degree,
      int pin_1, int pin_2, int pin_3, int pin_4,
      int reed_pin,
      unsigned int step_for_sidereal_orbit,
      unsigned long real_seconds_per_orbit)
   : m_Name(name)
-  , m_Type(type)
   , m_Stepper(steps_per_360_degree, pin_1, pin_2, pin_3, pin_4)
   , m_ReedContact(reed_pin)
   , m_StepsPerOrbit(step_for_sidereal_orbit)
@@ -21,11 +20,6 @@ Planet::Planet(String name, PlanetType type,
   m_Pins[1] = pin_2;
   m_Pins[2] = pin_3;
   m_Pins[3] = pin_4;
-}
-
-PlanetType Planet::getType() const
-{
-  return m_Type;
 }
 
 void Planet::prepareFastRun()

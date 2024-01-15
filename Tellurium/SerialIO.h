@@ -1,10 +1,9 @@
 #ifndef SERIALIO_H
 #define SERIALIO_H
 
-void PrintWelcome()
-{
+void PrintWelcome() {
  Serial.print("Tellurium Planetarium\n"
-               "(c) 2021-2023 Astronomischer Arbeitskreis Salzkammergut\n"
+               "(c) 2021-2024 Astronomischer Arbeitskreis Salzkammergut\n"
                "\n\n");
 }
 

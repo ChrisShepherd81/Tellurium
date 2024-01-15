@@ -16,8 +16,7 @@ Button FastForwardButton(BUTTON_PIN);
 
 static bool TimeIsSet = false;
 
-void InitClockLEDs()
-{
+void InitClockLEDs() {
   pinMode(PIN_LED_DCF_RECEIVED, OUTPUT);
   pinMode(PIN_LED_TIME_SET, OUTPUT);
 
@@ -25,20 +24,17 @@ void InitClockLEDs()
   digitalWrite(PIN_LED_TIME_SET, LOW);
 }
 
-void updateTimeState()
-{
+void updateTimeState() {
   digitalWrite(PIN_LED_TIME_SET, HIGH);
   TimeIsSet = true;
 }
 
-void SetArduinoTime(time_t time)
-{
+void SetArduinoTime(time_t time) {
   setTime(time);
   updateTimeState();
 }
 
-void SetArduinoTime(int hour, int minute, int second, int day, int month, int year)
-{
+void SetArduinoTime(int hour, int minute, int second, int day, int month, int year) {
   setTime(hour, minute, second, day, month, year);
   updateTimeState();
 }
@@ -46,21 +42,17 @@ void SetArduinoTime(int hour, int minute, int second, int day, int month, int ye
 class DCFClock
 {
 public:
-  DCFClock() : m_dcf(DCF_PIN,DCF_INTERRUPT)
-  {
+  DCFClock() : m_dcf(DCF_PIN,DCF_INTERRUPT) {
     m_dcf.Start();
   }
 
-  ~DCFClock()
-  {
+  ~DCFClock() {
      m_dcf.Stop();
   }
 
-  bool UpdateTime()
-  {
+  bool UpdateTime() {
     time_t DCFtime = m_dcf.getTime();
-    if (DCFtime!=0)
-    {
+    if (DCFtime!=0) {
       SetArduinoTime(DCFtime);
       return true;
     }   
