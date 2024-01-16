@@ -132,7 +132,7 @@ void MovePlanets() {
    //Planet loop
   for (int i = 0; i < NUMBER_OF_PLANETS; ++i) {
     Planet* planet = SolarSystem[i];
-    if(planet->getPositionForCurrentTime() < planet->getPosition()) {
+    if(planet->getPositionForCurrentTime() != planet->getPosition()) {
       planet->makeStep();
     }
   }
