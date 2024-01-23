@@ -125,7 +125,7 @@ void MoveAllPlanetsToCurrentDate() {
     planet->makeSteps(position_for_planet);
   }
 
-  StopAllMotors();
+  //StopAllMotors();
 }
 
 void MovePlanets() {
@@ -136,7 +136,7 @@ void MovePlanets() {
       planet->makeStep();
     }
   }
-  StopAllMotors();
+  //StopAllMotors();
 }
 
 #endif // SOLARSYSTEM_H
