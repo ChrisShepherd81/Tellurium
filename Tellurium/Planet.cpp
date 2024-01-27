@@ -16,10 +16,6 @@ Planet::Planet(String name,
   , m_RealSecondsPerOrbit(real_seconds_per_orbit)
 {
   pinMode(m_ReedContact, INPUT);
-  m_Pins[0] = pin_1;
-  m_Pins[1] = pin_2;
-  m_Pins[2] = pin_3;
-  m_Pins[3] = pin_4;
 }
 
 void Planet::prepareFastRun()
@@ -86,10 +82,7 @@ unsigned int Planet::getPositionForCurrentTime() const
 
 void Planet::stopMotor()
 {
-  for(int i=0; i<4; ++i)
-  {
-    digitalWrite(m_Pins[i], LOW);
-  }
+  m_Stepper.stop();
 }
 
 String Planet::getName() const

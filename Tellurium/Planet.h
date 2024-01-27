@@ -2,7 +2,7 @@
 #define PLANET_H
 
 #include <Arduino.h>
-#include <Stepper.h>
+#include <StepperMotor.h>
 
 class Planet
 {
@@ -39,7 +39,6 @@ private:
   int m_ReedContact;
   unsigned int m_StepsPerOrbit;
   unsigned long m_RealSecondsPerOrbit;
-  int m_Pins[4];
   
   unsigned long m_StepsMade = 0;
   unsigned long m_Position = 0;
